@@ -11,7 +11,7 @@ echo '' > $COVERAGE_FILE
 
 for DIR in $(find . -type d); do
   if ls $DIR/*.go &> /dev/null; then
-    go test -coverprofile=$TMP_FILE -covermode=atomic $DIR
+    go test -v -coverprofile=$TMP_FILE -covermode=count $DIR
     if [ -f $TMP_FILE ]; then
       cat $TMP_FILE >> $COVERAGE_FILE
       rm $TMP_FILE

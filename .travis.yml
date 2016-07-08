@@ -7,12 +7,20 @@ go:
 - 1.6
 
 before_install:
+# For codecov.io
 - go get github.com/onsi/gomega
 - go get github.com/onsi/ginkgo
+# For coveralls.io
+- go get github.com/mattn/goveralls
+# For both
 - go get golang.org/x/tools/cmd/cover
 
 script:
+# Test and exports coverage.txt
 - ./go_test.sh
 
 after_success:
+# Push the result to codecov.io
 - bash <(curl -s https://codecov.io/bash)
+# Push the result to coveralls.io
+- $GOPATH/bin/goveralls -coverprofile=coverage.txt -service=travis-ci -repotoken $COVERALLS_TOKEN

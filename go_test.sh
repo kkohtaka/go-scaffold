@@ -7,14 +7,16 @@ set -e
 COVERAGE_FILE=coverage.txt
 TMP_FILE=tmp.txt
 
-echo '' > $COVERAGE_FILE
+COVERMODE=atomic
 
-for DIR in $(find . -type d); do
-  if ls $DIR/*.go &> /dev/null; then
-    go test -v -coverprofile=$TMP_FILE -covermode=count $DIR
-    if [ -f $TMP_FILE ]; then
-      cat $TMP_FILE >> $COVERAGE_FILE
-      rm $TMP_FILE
-    fi
+echo "mode: $COVERMODE" > $COVERAGE_FILE
+
+for PKG in $(go list ./...); do
+  go test -v -coverprofile=$TMP_FILE -covermode=$COVERMODE $PKG
+  if [ -f $TMP_FILE ]; then
+    cat $TMP_FILE | tail -n +2 >> $COVERAGE_FILE
+    rm $TMP_FILE
   fi
 done
+
+go tool cover -html=coverage.txt -o coverage.html

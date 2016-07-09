@@ -5,9 +5,10 @@
 set -e
 
 COVERAGE_FILE=coverage.txt
+COVERAGE_HTML_FILE=coverage.html
 TMP_FILE=tmp.txt
 
-COVERMODE=atomic
+COVERMODE=count
 
 echo "mode: $COVERMODE" > $COVERAGE_FILE
 
@@ -19,4 +20,4 @@ for PKG in $(go list ./...); do
   fi
 done
 
-go tool cover -html=coverage.txt -o coverage.html
+go tool cover -html=$COVERAGE_FILE -o $COVERAGE_HTML_FILE
